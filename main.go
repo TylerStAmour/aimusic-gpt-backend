@@ -11,7 +11,7 @@ import (
 
 func main() {
 	server := &http.Server{
-		Addr: "http://127.0.0.1:8080",
+		Addr: "127.0.0.1:8080",
 		Handler: Get(),
 	}
 
@@ -34,7 +34,7 @@ func Get() *gin.Engine {
 
 func setAccessControl() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		c.Header("Access-Control-Allow-Origin", "https://aimusic.ca")
+		c.Header("Access-Control-Allow-Origin", "https://aimusic.pages.dev")
 		c.Header("Access-Control-Allow-Credentials", "true")
 		c.Header("Access-Control-Allow-Methods", "POST")
 	}
