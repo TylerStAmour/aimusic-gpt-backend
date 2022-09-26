@@ -37,7 +37,7 @@ func SetupCors() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Header("Access-Control-Allow-Origin", "https://aimusic.pages.dev")
 		c.Header("Access-Control-Allow-Credentials", "true")
-		c.Header("Access-Control-Allow-Methods", "POST")
+		c.Header("Access-Control-Allow-Methods", "POST, OPTIONS")
 	}
 }
 
