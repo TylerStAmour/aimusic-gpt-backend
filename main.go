@@ -29,7 +29,7 @@ func Get() *gin.Engine {
 	gpt := router.Group("/api/gpt")
 	gpt.POST("/prompt", postGPTPrompt)
 
-	gpt.Use(SetupCors())
+	router.Use(SetupCors())
 
 	return router
 }
