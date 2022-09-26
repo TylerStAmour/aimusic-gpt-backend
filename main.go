@@ -28,13 +28,23 @@ func Get() *gin.Engine {
 	gpt := router.Group("/api/gpt")
 	gpt.POST("/prompt", postGPTPrompt)
 
+	gpt.Use(SetupCors())
+
 	return router
+}
+
+func SetupCors() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Header("Access-Control-Allow-Origin", "https://aimusic.pages.dev")
+		c.Header("Access-Control-Allow-Credentials", "true")
+		c.Header("Access-Control-Allow-Methods", "POST")
+	}
 }
 
 func postGPTPrompt(ctx *gin.Context) {
 	prompt := ctx.Query("prompt")
 
-	payload := fmt.Sprintf("\"model\": \"text-babbage-001\", \"prompt\": \"%s\", \"temperature\": 0, \"max_tokens\": 512}", prompt)
+	payload := fmt.Sprintf("{\"model\": \"text-babbage-001\", \"prompt\": \"%s\", \"temperature\": 0, \"max_tokens\": 512}", prompt)
 	request, err := http.NewRequest("POST", Endpoint, bytes.NewBufferString(payload))
 	if err != nil {
 		ctx.AbortWithError(http.StatusInternalServerError, err)
