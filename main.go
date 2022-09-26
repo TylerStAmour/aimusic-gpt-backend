@@ -36,7 +36,6 @@ func Get() *gin.Engine {
 
 func SetupCors() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		c.Header("Access-Control-Allow-Origin", "https://aimusic.pages.dev")
 		c.Header("Access-Control-Allow-Methods", "POST, OPTIONS")
 		c.Header("Access-Control-Allow-Headers", "Accept, Accept-Encoding, Authorization, Cache-Control, Content-Type, Content-Length, Origin")
 
