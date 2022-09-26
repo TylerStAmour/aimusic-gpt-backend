@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
@@ -36,8 +37,14 @@ func Get() *gin.Engine {
 func SetupCors() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Header("Access-Control-Allow-Origin", "https://aimusic.pages.dev")
-		c.Header("Access-Control-Allow-Credentials", "true")
 		c.Header("Access-Control-Allow-Methods", "POST, OPTIONS")
+		c.Header("Access-Control-Allow-Headers", "Accept, Accept-Encoding, Authorization, Cache-Control, Content-Type, Content-Length, Origin")
+
+		if c.Request.Method == http.MethodOptions {
+			c.AbortWithStatus(http.StatusNoContent)
+			return
+		}
+		c.Next()
 	}
 }
 
@@ -61,11 +68,24 @@ func postGPTPrompt(ctx *gin.Context) {
 		return
 	}
 
+	var response struct {
+		Id string `json:"id"`
+		Choices []struct {
+			Text string `json:"text"`
+		} `json:"choices"`
+	}
+
 	data, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		ctx.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
 
-	ctx.JSON(http.StatusOK, data)
+	if err := json.Unmarshal(data, &response); err != nil {
+		ctx.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+
+
+	ctx.JSON(http.StatusCreated, response.Choices[0].Text)
 }
