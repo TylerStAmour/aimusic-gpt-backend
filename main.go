@@ -28,16 +28,7 @@ func Get() *gin.Engine {
 	gpt := router.Group("/api/gpt")
 	gpt.POST("/prompt", postGPTPrompt)
 
-	gpt.Use(setAccessControl())
 	return router
-}
-
-func setAccessControl() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		c.Header("Access-Control-Allow-Origin", "https://aimusic.pages.dev")
-		c.Header("Access-Control-Allow-Credentials", "true")
-		c.Header("Access-Control-Allow-Methods", "POST")
-	}
 }
 
 func postGPTPrompt(ctx *gin.Context) {
